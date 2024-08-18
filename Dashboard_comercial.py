@@ -5,20 +5,16 @@ from sklearn.linear_model import LinearRegression
 from sklearn.model_selection import cross_val_score
 import plotly.express as px
 from datetime import datetime
-import locale
 
 # Configuração da página
 st.set_page_config(page_title="Análise Comercial Completa", layout="wide")
 
-# Configurar o locale para pt_BR
-locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
-
-# Funções de formatação
+# Funções de formatação manual
 def formatar_moeda(valor):
-    return locale.currency(valor, grouping=True, symbol='R$')
+    return f'R$ {valor:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
 
 def formatar_numero(valor):
-    return locale.format_string('%.2f', valor, grouping=True)
+    return f'{valor:,.2f}'.replace(',', 'X').replace('.', ',').replace('X', '.')
 
 # Função para gerar dados fictícios
 @st.cache_data
