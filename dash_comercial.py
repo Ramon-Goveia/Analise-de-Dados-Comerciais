@@ -152,7 +152,7 @@ def analise_correlacao(dados):
 
 # Função principal para exibir o dashboard no Streamlit
 def main():
-    st.title("Análise Comercial Completa")
+    st.title("Análise De Dados Comerciais")
 
     # Gerar dados fictícios
     dados_vendas = gerar_dados()
