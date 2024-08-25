@@ -1,4 +1,4 @@
-## Aplicação Web - Análise de Dados Comerciais com Python, Streamlit e Plotly
+## Aplicação Web - Análise de Dados Comerciais com Python, Streamlit e Plotly v1.0.
 
 ### Descrição
 Este projeto é uma aplicação web desenvolvida para análise de dados comerciais, utilizando Python, Streamlit e Plotly. A aplicação fornece uma interface interativa para explorar e prever tendências de vendas, receita, custos e lucro, oferecendo insights valiosos para análise de negócios.
