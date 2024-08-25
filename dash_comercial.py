@@ -177,43 +177,61 @@ def main():
     if vendedor_selecionado:
         dados_filtrados = dados_filtrados[dados_filtrados['Vendedor'].isin(vendedor_selecionado)]
 
-    st.header("Visão Geral")
-    st.dataframe(dados_filtrados)
+    # Prever as vendas futuras
+    dados_futuros, score_modelo = prever_vendas(dados_filtrados)
 
-    # Análise temporal
-    st.header("Análise Temporal")
-    fig_receita_mensal, fig_lucro_mensal = analise_temporal(dados_filtrados)
-    st.plotly_chart(fig_receita_mensal)
-    st.plotly_chart(fig_lucro_mensal)
-
-    # Análise de produtos
-    st.header("Análise de Produtos")
+    # Criar gráficos
+    fig_vendas = criar_grafico_linha(dados_filtrados, 'Data', 'Vendas', 'Vendas Diárias')
+    fig_previsao = criar_grafico_linha(dados_futuros, 'Data', 'Vendas', 'Previsão de Vendas')
+    fig_mapa = criar_mapa_vendas(dados_filtrados)
     fig_vendas_produto, fig_lucro_produto = analise_produtos(dados_filtrados)
-    st.plotly_chart(fig_vendas_produto)
-    st.plotly_chart(fig_lucro_produto)
-
-    # Análise de clientes
-    st.header("Análise de Clientes")
     fig_receita_cliente, fig_lucro_cliente = analise_clientes(dados_filtrados)
-    st.plotly_chart(fig_receita_cliente)
-    st.plotly_chart(fig_lucro_cliente)
-
-    # Previsão de vendas
-    st.header("Previsão de Vendas para 2024")
-    dados_futuros, media_scores = prever_vendas(dados_filtrados)
-    st.write(f"Acurácia média do modelo: {media_scores:.2f}")
-    fig_previsao_vendas = criar_grafico_linha(dados_futuros, 'Data', 'Vendas', 'Previsão de Vendas para 2024')
-    st.plotly_chart(fig_previsao_vendas)
-
-    # Mapa de vendas
-    st.header("Mapa de Vendas por País")
-    fig_mapa_vendas = criar_mapa_vendas(dados_filtrados)
-    st.plotly_chart(fig_mapa_vendas)
-
-    # Análise de correlação
-    st.header("Análise de Correlação")
+    fig_receita_mensal, fig_lucro_mensal = analise_temporal(dados_filtrados)
     fig_correlacao = analise_correlacao(dados_filtrados)
-    st.plotly_chart(fig_correlacao)
 
+    # Exibir gráficos no Streamlit
+    st.header("Vendas Diárias e Previsão")
+    col1, col2 = st.columns(2)
+    with col1:
+        st.plotly_chart(fig_vendas, use_container_width=True)
+    with col2:
+        st.plotly_chart(fig_previsao, use_container_width=True)
+
+    st.metric("Precisão do Modelo de Previsão", formatar_numero(score_modelo))
+
+    st.header("Mapa de Vendas por País")
+    st.plotly_chart(fig_mapa, use_container_width=True)
+
+    st.header("Análise de Produtos")
+    col3, col4 = st.columns(2)
+    with col3:
+        st.plotly_chart(fig_vendas_produto, use_container_width=True)
+    with col4:
+        st.plotly_chart(fig_lucro_produto, use_container_width=True)
+
+    st.header("Análise de Clientes")
+    col5, col6 = st.columns(2)
+    with col5:
+        st.plotly_chart(fig_receita_cliente, use_container_width=True)
+    with col6:
+        st.plotly_chart(fig_lucro_cliente, use_container_width=True)
+
+    st.header("Análise Temporal")
+    col7, col8 = st.columns(2)
+    with col7:
+        st.plotly_chart(fig_receita_mensal, use_container_width=True)
+    with col8:
+        st.plotly_chart(fig_lucro_mensal, use_container_width=True)
+
+    st.header("Análise de Correlação")
+    st.plotly_chart(fig_correlacao, use_container_width=True)
+
+    # Opção para download dos dados
+    st.download_button(
+        label="Baixar dados filtrados",
+        data=dados_filtrados.to_csv(index=False).encode('utf-8'),
+        file_name='dados_filtrados.csv',
+        mime='text/csv',
+    )
 if __name__ == "__main__":
     main()
